@@ -107,6 +107,7 @@ async function startAccounts(config) {
   account.onclick = menu
   addEventListener('online',()=>{ if(session) void flush(session) })
   authApi.onAuthStateChanged(auth, async user => {
+    window.resetCalendar()
     session = null
     accountSave = null
     display(load())
@@ -137,6 +138,9 @@ async function startAccounts(config) {
       }
       display(snapshot)
       accountSave = payload => queue(s, payload)
+      window.enableCalendar(user,authApi)
+      renderAgenda()
+      renderTimeline()
       account.textContent = 'Minha conta'
       status(s.conflict ? 'Conflito · abra a conta' : 'Sincronizado')
       if (!saved.exists() || s.pending) queue(s, JSON.stringify(state))

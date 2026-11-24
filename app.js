@@ -68,7 +68,13 @@ function toast(message){
   $('toast').textContent=message
   toastTimer=setTimeout(()=>$('toast').textContent='',3500)
 }
-const eventsFor=(d)=>state.events.filter(e=>e.day===d).sort((a,b)=>a.start.localeCompare(b.start))
+const calendarDays = new Map()
+const exampleEvents = seed().events
+function isOriginalExample(e) {
+  const original = exampleEvents.find(item => item.id === e.id)
+  return original && ['title','description','context','start','end'].every(k=>original[k]===e[k]) && !e.items?.length
+}
+const eventsFor=(d)=>[...state.events.filter(e=>e.day===d && !(accountSave && isOriginalExample(e))), ...(calendarDays.get(d)||[])].sort((a,b)=>a.start.localeCompare(b.start))
 function render(){
   const mode = modes[state.mode]
   const context = current()
@@ -95,13 +101,14 @@ function render(){
   renderAlerts()
 }
 function renderAgenda(){
-  const items=eventsFor(day).filter(e=>modeOf(e)===state.mode)
+  window.refreshCalendarDay?.(day)
+  const items=eventsFor(day).filter(e=>e.google || modeOf(e)===state.mode)
   $('events').replaceChildren(...items.map(e=>{
     const row=node('div','event')
-    const open=button('','event-open',()=>editEvent(e),`Abrir ${e.title}`)
+    const open=button('','event-open',()=>openAgendaEvent(e),`Abrir ${e.title}`)
     const text=node('span')
-    text.append(node('strong','',e.title),node('small','',`${modes[modeOf(e)].name}${e.description?` · ${e.description}`:''}`))
-    open.append(node('time','',e.start),text)
+    text.append(node('strong','',e.title),node('small','',`${e.google?'Google Agenda':modes[modeOf(e)].name}${e.description?` · ${e.description}`:''}`))
+    open.append(node('time','',e.allDay?'Dia inteiro':e.start),text)
     row.append(open)
     return row
   }))
@@ -145,7 +152,7 @@ function renderTimeline(){
     const lane=lanes.findIndex(available=>available<=start)
     const row=lane<0?lanes.length:lane
     lanes[row]=end
-    const item=button(e.title,`block ${modeOf(e)==='estudos'?'study':'project'}`,()=>editEvent(e),`${modes[modeOf(e)].name} · ${e.title} · ${e.start}–${e.end}`)
+    const item=button(e.title,`block ${modeOf(e)==='estudos'?'study':'project'}`,()=>openAgendaEvent(e),`${e.google?'Google Agenda':modes[modeOf(e)].name} · ${e.title} · ${e.start}–${e.end}`)
     item.title=`${e.start}–${e.end} · ${e.title}`
     item.style.left=`${start/1440*100}%`
     item.style.width=`${(end-start)/1440*100}%`
@@ -215,6 +222,13 @@ function modal(title, fields, submit, remove, label='Salvar'){
   if(!dialog.open) dialog.showModal()
 }
 const value=(form,k)=>String(form.get(k)||'').trim()
+function openAgendaEvent(event) {
+  if (!event.google) return editEvent(event)
+  const dialog=$('editor')
+  const close=button('Fechar','action',()=>dialog.close())
+  dialog.replaceChildren(node('h2','',event.title),node('p','',event.allDay?'Dia inteiro':event.start+' – '+event.end),node('p','','Google Agenda · Calendário principal'),close)
+  dialog.showModal()
+}
 function editEvent(existing, proposal, confirmProposal){
   const event=existing||proposal||{context:current().id,day,start:'09:00',end:'10:00',title:'',description:'',items:[]}
   const contexts=state.contexts.map(c=>({value:c.id,label:`${modes[c.mode].name} · ${c.name}`}))
@@ -355,7 +369,7 @@ function localCommand(text, context, selectedDate) {
   const input = text.trim().replace(/[.!]$/, '')
   if (/^(ajuda|comandos|o que posso pedir)\??$/i.test(input)) return reply(help)
   const items = context.tasks
-  const events = state.events.filter(e=>e.context===context.id)
+  const events = state.events.filter(e=>e.context===context.id && !(accountSave && isOriginalExample(e)))
   function lookup(list, name, field) {
     const matches = list.filter(row=>norm(row[field])===norm(clean(name)))
     if(matches.length===1) return matches[0]

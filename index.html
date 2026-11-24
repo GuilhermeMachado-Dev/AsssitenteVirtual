@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="auralis.css">
   <script defer src="app.js"></script>
   <script defer src="firebase-config.js"></script>
+  <script defer src="calendar.js"></script>
   <script defer src="account.js"></script>
   <script defer src="motion.js"></script>
 </head>
@@ -27,6 +28,7 @@
       <section class="panel agenda">
         <div class="heading"><h2><span aria-hidden="true">▦</span> Agenda</h2><button class="icon" data-add="event" aria-label="Nova atividade">+</button></div>
         <div class="datebar"><button class="icon" id="prev" aria-label="Dia anterior">‹</button><label><span id="date-label"></span><input id="date" type="date" aria-label="Escolher data"></label><button class="icon" id="next" aria-label="Dia seguinte">›</button></div>
+        <div class="panel-footer"><button id="connect-calendar" class="link" hidden>Conectar Google Agenda</button><small id="calendar-status" role="status"></small></div>
         <div id="events" class="entries"></div>
         <div class="panel-footer"><button class="link" data-add="event">+ Nova atividade</button><button class="link subtle" id="today">Hoje</button></div>
       </section>

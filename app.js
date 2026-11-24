@@ -43,7 +43,9 @@ const skills = {}
 const current = () => state.contexts.find(c=>c.id===state.active[state.mode])
 const byContext = (id) => state.contexts.find(c=>c.id===id)
 const modeOf = (e) => byContext(e.context)?.mode || 'estudos'
+let accountSave = null
 const save = () => {
+  if(accountSave) { accountSave(JSON.stringify(state)); return }
   try { localStorage.setItem(key,JSON.stringify(state)) }
   catch { toast('O navegador não permitiu salvar os dados locais.') }
 }
@@ -452,11 +454,13 @@ function send(text){
   const context=current()
   if(!text.trim()) return
   if(busy.has(context.id)){toast('Aguarde a resposta atual.');return}
+  const requestedState=state
   const requestedDay=day
   chatFor(context).push({role:'user',text:text.trim()})
   busy.add(context.id)
   update()
   setTimeout(()=>{
+    if(state!==requestedState) return
     chatFor(context).push(localCommand(text,context,requestedDay) || demoResponse(text,context,requestedDay))
     busy.delete(context.id)
     update()

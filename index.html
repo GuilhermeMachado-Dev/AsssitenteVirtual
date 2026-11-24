@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="auralis.css">
   <script defer src="app.js"></script>
+  <script defer src="firebase-config.js"></script>
+  <script defer src="account.js"></script>
   <script defer src="motion.js"></script>
 </head>
 <body>
@@ -15,7 +17,7 @@
   <header class="top">
     <div class="brand"><span class="atom" aria-hidden="true">⚛</span><div><strong>Assistente <em>IA.</em></strong><small>Seu copiloto de estudos e projetos</small></div></div>
     <nav class="switch" aria-label="Modo"><button data-mode="estudos">Estudos</button><button data-mode="projetos">Projetos</button></nav>
-    <div class="utilities"><span class="local"><i></i> Protótipo local</span><button id="bell" class="icon bell" aria-label="Notificações" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-9 13a2 2 0 0 0 4 0"/></svg><b id="unread" hidden></b></button></div>
+    <div class="utilities"><span class="local"><i></i> <span id="sync-status" role="status">Neste navegador</span></span><button id="account" class="action" hidden>Entrar</button><button id="bell" class="icon bell" aria-label="Notificações" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-9 13a2 2 0 0 0 4 0"/></svg><b id="unread" hidden></b></button></div>
     <section id="notifications" class="panel notifications" aria-label="Notificações" hidden></section>
   </header>
   <section class="skills" aria-label="Habilidades"><span>Habilidades</span><div id="skills"></div></section>

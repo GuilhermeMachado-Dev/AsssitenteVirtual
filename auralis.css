@@ -1,0 +1,120 @@
+@font-face {
+  font-family: "Google Sans Flex"; font-style: normal; font-weight: 200;
+  src: url("fonts/GoogleSansFlex_9pt-ExtraLight.ttf") format("truetype"); font-display: swap;
+}
+@font-face {
+  font-family: "Google Sans Flex"; font-style: normal; font-weight: 400;
+  src: url("fonts/GoogleSansFlex_9pt-Regular.ttf") format("truetype"); font-display: swap;
+}
+@font-face {
+  font-family: Onest; font-style: normal; font-weight: 100 900;
+  src: url("fonts/onest-latin.woff2") format("woff2"); font-display: swap;
+}
+:root, :root[data-mode=projetos] {
+  --overlay-ink: #fff;
+  --overlay-strong: #fffc;
+  --overlay-solid: #000;
+  --overlay-scrim: #0000001a;
+  --overlay-glass: #ffffff1a;
+  --overlay-line: #fff3;
+  --overlay-edge: #fff6;
+  --overlay-accent: #6fff85;
+  --display: "Google Sans Flex", Onest, sans-serif;
+  --accent: var(--overlay-accent);
+  --soft: var(--overlay-ink);
+  --second: var(--overlay-accent);
+  --text: var(--overlay-ink);
+  --muted: var(--overlay-strong);
+  --bg: var(--overlay-solid);
+  --surface: #111313;
+  --edge: var(--overlay-line);
+  font-family: Onest, sans-serif;
+}
+.atmosphere {
+  background: radial-gradient(ellipse at 50% 43%, #10232c 0, #070c10 38%, #000 78%);
+}
+[data-mode=projetos] .atmosphere {
+  background: radial-gradient(ellipse at 50% 43%, #10251b 0, #080f0c 38%, #000 78%);
+}
+.shell { padding-top: 0; }
+.top {
+  padding: 14px 0; border-bottom: 1px solid var(--overlay-line);
+  background: var(--overlay-scrim); backdrop-filter: blur(28px);
+}
+.brand strong, .heading h2, .timeline h2, .hero h1, dialog h2 {
+  font-family: var(--display); font-weight: 200; line-height: 1.1;
+}
+.brand strong { font-weight: 400; letter-spacing: -.045em; }
+.brand em, .hero em { color: inherit; }
+.atom { color: white; font-size: 39px; text-shadow: none; }
+.brand small { margin-top: 3px; }
+.switch, .switch button, .skills button, .quick button, .action, .icon,
+.local, .pill, .datebar label, .composer, .bubble, .progress,
+.sidebar summary, .task .icon, .block { border-radius: 0; }
+.switch { background: transparent; border: 0; padding: 0; gap: 12px; }
+.switch button, .switch button[aria-pressed=true] {
+  background: transparent; box-shadow: none; border: 0; border-bottom: 1px solid transparent;
+  min-width: 0; padding: 8px 6px; font: 400 1rem/1.1 var(--display);
+}
+.switch button[aria-pressed=true] { color: white; border-bottom-color: var(--overlay-accent); }
+.local, .pill {
+  background: transparent; border: 0; font: 400 .75rem/1.2 var(--display);
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.local i, .bell b, .legend span::before { border-radius: 0; }
+.local i { background: var(--overlay-accent); }
+.skills { max-width: none; margin: 16px 0; gap: 18px; }
+.skills>span, .check-context label, .chat-context, .message small {
+  font: 400 .75rem/1.3 var(--display); text-transform: uppercase; letter-spacing: .08em;
+}
+.skills>div { justify-content: flex-start; }
+.skills>div::before { display: none; }
+.skills button, .quick button, .action, .icon {
+  background: var(--overlay-glass); border: 1px solid var(--overlay-edge);
+  color: var(--overlay-ink); font-family: var(--display); font-weight: 400;
+  transition: background-color .2s, border-color .2s;
+}
+.skills button { min-width: 0; padding: 7px 16px; }
+.skills button[aria-pressed=true], .action.primary {
+  background: var(--overlay-solid); border-color: var(--overlay-accent); box-shadow: none;
+}
+button:hover:not(:disabled):is(.icon,.action,.skills button,.quick button) { background: var(--overlay-line); }
+.link:hover, .event-open:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+.panel, .dashboard .panel {
+  border: 1px solid var(--overlay-line); border-radius: 0; box-shadow: none;
+  background: linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+  backdrop-filter: blur(16px);
+}
+.panel.notifications { background: rgba(10,12,12,.97); max-height: 72vh; overflow: auto; }
+.heading { border-color: var(--overlay-line); }
+.heading h2, .timeline h2 { text-transform: uppercase; letter-spacing: -.025em; }
+.heading h2 span { display: none; }
+.hero h1 {
+  text-transform: uppercase; font-size: clamp(26px,3.2vw,55px); letter-spacing: -.045em;
+}
+.hero-copy { max-width: 100%; }
+.hero-copy em { display: block; }
+@media(min-width:851px) and (max-height:980px){.hero-art{width:min(100%,470px,55vh)}}
+.datebar label, .progress, .composer, .bubble { background: rgba(0,0,0,.40); }
+.bubble { border-color: var(--overlay-line); }
+.message.user .bubble { background: var(--overlay-glass); }
+.event-open time, .timeline-head time { font-variant-numeric: tabular-nums; }
+input:not([type=checkbox]), select, textarea {
+  border-radius: 0; background: #121515; border-color: var(--overlay-edge);
+}
+input[type=checkbox]{ accent-color: var(--overlay-accent); }
+progress, progress::-webkit-progress-bar { border-radius: 0; }
+progress::-webkit-progress-value { background: var(--overlay-accent); }
+progress::-moz-progress-bar { background: var(--overlay-accent); }
+.timeline .block { color: white; border-color: var(--overlay-line); border-left: 2px solid var(--block); }
+dialog { background: #171919; border-radius: 12px; border-color: var(--overlay-line); }
+dialog::backdrop { background: #0009; backdrop-filter: blur(4px); }
+dialog h2 { font-size: 1.8rem; }
+#toast { border-radius: 0; background: #101211; border-color: var(--overlay-edge); }
+@media(max-width:640px){
+  .top { padding: 12px 0 8px; }
+  .skills { gap: 8px; margin: 12px 0; }
+  .skills button { padding: 6px 8px; }
+  .hero-copy { margin-top: -4%; }
+  .hero-copy em { display: inline; }
+}

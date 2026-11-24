@@ -473,9 +473,11 @@ function send(text){
   chatFor(context).push({role:'user',text:text.trim()})
   busy.add(context.id)
   update()
-  setTimeout(()=>{
+  setTimeout(async ()=>{
     if(state!==requestedState) return
-    chatFor(context).push(localCommand(text,context,requestedDay) || demoResponse(text,context,requestedDay))
+    const answer = await answerCalendarQuestion(text,requestedDay)
+    if(state!==requestedState) return
+    chatFor(context).push(answer ? {role:'agent',text:answer} : localCommand(text,context,requestedDay) || demoResponse(text,context,requestedDay))
     busy.delete(context.id)
     update()
   },850)

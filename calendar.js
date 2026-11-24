@@ -43,14 +43,14 @@ window.refreshCalendarDay = async selected => {
   if (!c?.token) return
   calendarButton.textContent = 'Atualizar Google Agenda'
   if (calendarDays.has(selected)) {
-    calendarStatus.textContent = calendarDays.get(selected).length ? 'Calendário principal' : 'Sem compromissos no calendário principal'
+    if(day===selected) calendarStatus.textContent = calendarDays.get(selected).length ? 'Calendário principal' : 'Sem compromissos no calendário principal'
     return
   }
   if (c.errors.has(selected)) {
-    calendarStatus.textContent = 'Falha ao consultar o Google Agenda. Tente atualizar.'
+    if(day===selected) calendarStatus.textContent = 'Falha ao consultar o Google Agenda. Tente atualizar.'
     return
   }
-  calendarStatus.textContent = 'Consultando o Google Agenda…'
+  if(day===selected) calendarStatus.textContent = 'Consultando o Google Agenda…'
   if (c.loading.has(selected)) return
   c.loading.add(selected)
   const start = new Date(selected+'T00:00:00')
@@ -92,4 +92,22 @@ window.refreshCalendarDay = async selected => {
       renderAgenda();renderTimeline()
     } else if(day===selected) calendarStatus.textContent = 'Falha ao consultar o Google Agenda. Tente atualizar.'
   } finally { c.loading.delete(selected) }
+}
+
+async function answerCalendarQuestion(text, selected) {
+  const q = text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
+  if (!/agenda|calendario|compromissos/.test(q) || !/quais|mostrar|mostr[ae]|consultar|tenho|informacoes|listar|o que|proximos dias/.test(q)) return null
+  if (!calendarConnection?.token) return 'Abra a Agenda e selecione “Conectar Google Agenda” para consultar seus compromissos reais.'
+  const count = /proximos dias|semana/.test(q) ? 7 : 1
+  const cursor = dateOf(selected)
+  if (/amanha/.test(q)) cursor.setDate(cursor.getDate()+1)
+  const lines = []
+  for (let i=0;i<count;i++) {
+    const date = dateKey(cursor)
+    await window.refreshCalendarDay(date)
+    if (!calendarDays.has(date)) return 'Ainda não consegui consultar todo o período. Atualize a conexão na Agenda e tente novamente.'
+    for (const event of calendarDays.get(date)) lines.push(dateLabel(date)+' · '+(event.allDay?'Dia inteiro':event.start+'–'+event.end)+' · '+event.title)
+    cursor.setDate(cursor.getDate()+1)
+  }
+  return lines.length ? 'No seu Google Agenda:\n'+lines.join('\n') : 'Seu calendário principal não tem compromissos nesse período.'
 }
